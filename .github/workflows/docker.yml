@@ -9,7 +9,7 @@ on:
       - 'v*.*.*'
 
 env:
-  IMAGE_NAME: tonuser/tonimage
+  IMAGE_NAME: laurentlemercier/udemy_enroller
 
 jobs:
   build:
