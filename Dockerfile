@@ -16,7 +16,7 @@ WORKDIR /build
 COPY requirements.txt .
 RUN pip install --upgrade pip setuptools wheel packaging
 # Build wheels (multi-arch safe) - setuptools et wheel inclus dans les wheels
-RUN pip wheel --no-cache-dir --wheel-dir /wheels "setuptools<72" wheel packaging && \
+RUN pip wheel --no-cache-dir --wheel-dir /wheels setuptools wheel packaging && \
     pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
 
 ############################
@@ -42,9 +42,9 @@ RUN if [ "$ENVIRONMENT" = "prod" ]; then \
 WORKDIR /app
 COPY --from=builder /wheels /wheels
 # Installer setuptools en premier pour fournir distutils et pkg_resources
-RUN pip install --no-cache-dir "setuptools<72" \
+RUN pip install --no-cache-dir setuptools>=69.0.0 \
     && pip install --no-cache-dir /wheels/* \
-    && pip install --no-cache-dir --force-reinstall "setuptools<72" \
+    && pip install --no-cache-dir --force-reinstall setuptools>=69.0.0 \
     && python -c "import pkg_resources; print('pkg_resources OK')"
     
 COPY . .
