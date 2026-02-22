@@ -15,12 +15,12 @@ RUN apt-get update && apt-get install -y \
     python3-dev \
     cmake \
     && rm -rf /var/lib/apt/lists/*
-    
+
 WORKDIR /build
 
 COPY requirements.txt .
 
-RUN pip install --upgrade pip setuptools wheel
+RUN pip install --upgrade pip setuptools wheel packaging
 
 # Build wheels (multi-arch safe)
 RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
@@ -55,8 +55,9 @@ RUN if [ "$ENVIRONMENT" = "prod" ]; then \
 WORKDIR /app
 
 COPY --from=builder /wheels /wheels
-RUN pip install --no-cache-dir /wheels/*
-
+RUN pip install --no-cache-dir setuptools \
+    && pip install --no-cache-dir /wheels/*
+    
 COPY . .
 RUN chown -R ${user}:${group} /app
 
