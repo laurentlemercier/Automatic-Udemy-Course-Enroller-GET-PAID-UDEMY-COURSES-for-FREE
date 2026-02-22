@@ -42,9 +42,11 @@ RUN if [ "$ENVIRONMENT" = "prod" ]; then \
 WORKDIR /app
 COPY --from=builder /wheels /wheels
 # Installer setuptools en premier pour fournir distutils et pkg_resources
-RUN pip install --no-cache-dir /wheels/setuptools*.whl /wheels/wheel*.whl \
-    && pip install --no-cache-dir /wheels/*
-
+RUN pip install --no-cache-dir setuptools>=69.0.0 \
+    && pip install --no-cache-dir /wheels/* \
+    && pip install --no-cache-dir --force-reinstall setuptools>=69.0.0 \
+    && python -c "import pkg_resources; print('pkg_resources OK')"
+    
 COPY . .
 RUN chown -R ${user}:${group} /app
 USER ${user}
