@@ -1,7 +1,13 @@
-# ---------- Builder ----------
-FROM python:3.11-slim AS builder
+# syntax=docker/dockerfile:1.6
 
-# Installer uniquement ce qui est nécessaire pour compiler
+############################
+#        BUILDER
+############################
+FROM python:3.13-slim AS builder
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
+
 RUN apt-get update && apt-get install -y \
     gcc \
     build-essential \
@@ -11,18 +17,21 @@ RUN apt-get update && apt-get install -y \
 
 WORKDIR /build
 
-# Copier uniquement requirements pour optimiser le cache
 COPY requirements.txt .
 
-# Mettre pip à jour (important avec Python 3.12 + ARM)
 RUN pip install --upgrade pip setuptools wheel
 
-# Construire les dépendances dans un prefix isolé
-RUN pip install --prefix=/install --no-cache-dir -r requirements.txt
+# Build wheels (multi-arch safe)
+RUN pip wheel --no-cache-dir --wheel-dir /wheels -r requirements.txt
 
 
-# ---------- Final image ----------
-FROM python:3.11-slim
+############################
+#        RUNTIME
+############################
+FROM python:3.13-slim
+
+ENV PYTHONDONTWRITEBYTECODE=1
+ENV PYTHONUNBUFFERED=1
 
 ARG user=enroller
 ARG group=enroller
@@ -31,7 +40,10 @@ ARG ENVIRONMENT=develop # develop / prod
 ENV uid=1000
 ENV gid=1000
 
-# Créer utilisateur non-root
+# Runtime libs uniquement
+RUN apt-get update && apt-get install -y \
+    libffi8 \
+    && rm -rf /var/lib/apt/lists/*
 
 RUN if [ "$ENVIRONMENT" = "prod" ]; then \
       useradd -u ${uid} -g ${group} -s /usr/sbin/nologin ${user}; \
@@ -39,18 +51,15 @@ RUN if [ "$ENVIRONMENT" = "prod" ]; then \
       useradd -u ${uid} -g ${group} -s /bin/sh ${user}; \
     fi
 
-# Créer home proprement
-RUN mkdir -p /home/${user}/.udemy_enroller \
-    && chown -R ${user}:${group} /home/${user}
+WORKDIR /app
 
-WORKDIR /src
+COPY --from=builder /wheels /wheels
+RUN pip install --no-cache-dir /wheels/*
 
-# Copier les dépendances construites
-COPY --from=builder /install /usr/local
-
-# Copier le code après (important pour cache Docker)
 COPY . .
+RUN chown -R ${user}:${group} /app
 
 USER ${user}
 
 ENTRYPOINT ["python", "run_enroller.py"]
+
