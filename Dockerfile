@@ -1,5 +1,5 @@
 # ---------- Builder ----------
-FROM python:3.12-slim AS builder
+FROM python:3.11-slim AS builder
 
 # Installer uniquement ce qui est nécessaire pour compiler
 RUN apt-get update && apt-get install -y \
@@ -22,17 +22,22 @@ RUN pip install --prefix=/install --no-cache-dir -r requirements.txt
 
 
 # ---------- Final image ----------
-FROM python:3.12-slim
+FROM python:3.11-slim
 
 ARG user=enroller
 ARG group=enroller
+ARG ENVIRONMENT=develop # develop / prod
 
 ENV uid=1000
 ENV gid=1000
 
 # Créer utilisateur non-root
-RUN groupadd -g ${gid} ${group} \
-    && useradd -u ${uid} -g ${group} -s /bin/sh ${user}
+
+RUN if [ "$ENVIRONMENT" = "prod" ]; then \
+      useradd -u ${uid} -g ${group} -s /usr/sbin/nologin ${user}; \
+    else \
+      useradd -u ${uid} -g ${group} -s /bin/sh ${user}; \
+    fi
 
 # Créer home proprement
 RUN mkdir -p /home/${user}/.udemy_enroller \
