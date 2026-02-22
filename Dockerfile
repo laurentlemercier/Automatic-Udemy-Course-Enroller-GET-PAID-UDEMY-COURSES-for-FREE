@@ -2,7 +2,7 @@
 ############################
 #        BUILDER
 ############################
-FROM python:3.13-slim AS builder
+FROM python:3.12-slim AS builder
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 RUN apt-get update && apt-get install -y \
@@ -22,7 +22,7 @@ RUN pip wheel --no-cache-dir --wheel-dir /wheels setuptools wheel packaging && \
 ############################
 #        RUNTIME
 ############################
-FROM python:3.13-slim
+FROM python:3.12-slim
 ENV PYTHONDONTWRITEBYTECODE=1
 ENV PYTHONUNBUFFERED=1
 ARG user=enroller
