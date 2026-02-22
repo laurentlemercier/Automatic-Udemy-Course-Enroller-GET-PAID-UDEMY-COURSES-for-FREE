@@ -28,6 +28,9 @@ ENV PYTHONUNBUFFERED=1
 ARG user=enroller
 ARG group=enroller
 ARG ENVIRONMENT=develop # develop / prod
+ARG GIT_SHA=unknown
+ARG GIT_BRANCH=unknown
+LABEL git.sha=$GIT_SHA git.branch=$GIT_BRANCH
 ENV uid=1000
 ENV gid=1000
 # Runtime libs uniquement
@@ -45,7 +48,7 @@ COPY --from=builder /wheels /wheels
 RUN pip install --no-cache-dir setuptools>=69.0.0 \
     && pip install --no-cache-dir /wheels/* \
     && pip install --no-cache-dir --force-reinstall setuptools>=69.0.0 
-        
+
 COPY . .
 RUN chown -R ${user}:${group} /app
 USER ${user}
