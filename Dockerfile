@@ -13,8 +13,9 @@ RUN apt-get update && apt-get install -y \
     build-essential \
     libffi-dev \
     python3-dev \
+    cmake \
     && rm -rf /var/lib/apt/lists/*
-
+    
 WORKDIR /build
 
 COPY requirements.txt .
