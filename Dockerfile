@@ -46,9 +46,9 @@ RUN apt-get update && apt-get install -y \
     && rm -rf /var/lib/apt/lists/*
 
 RUN if [ "$ENVIRONMENT" = "prod" ]; then \
-      useradd -u ${uid} -g ${group} -s /usr/sbin/nologin ${user}; \
+      groupadd -g ${gid} ${group} && useradd -u ${uid} -g ${group} -s /usr/sbin/nologin ${user}; \
     else \
-      useradd -u ${uid} -g ${group} -s /bin/sh ${user}; \
+      groupadd -g ${gid} ${group} && useradd -u ${uid} -g ${group} -s /bin/sh ${user}; \
     fi
 
 WORKDIR /app
