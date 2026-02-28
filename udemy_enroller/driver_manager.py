@@ -7,11 +7,11 @@ from selenium.webdriver.edge.service import Service as EdgeService
 from selenium.webdriver.firefox.service import Service as FirefoxService
 from selenium.webdriver.ie.service import Service as IEService
 
-# Importations Webdriver Manager
 from webdriver_manager.chrome import ChromeDriverManager
-from webdriver_manager.core.os_manager import ChromeType  # Requis pour le mock et Chromium
+from webdriver_manager.core.os_manager import ChromeType 
 from webdriver_manager.firefox import GeckoDriverManager
 from webdriver_manager.microsoft import EdgeChromiumDriverManager, IEDriverManager
+# NOTE: OperaDriverManager est supprimé car obsolète (remplacé par ChromeType.CHROMIUM)
 
 from udemy_enroller.logger import get_logger
 
@@ -25,7 +25,6 @@ VALID_OPERA_STRINGS = {"opera"}
 VALID_EDGE_STRINGS = {"edge"}
 
 ALL_VALID_BROWSER_STRINGS = VALID_CHROME_STRINGS.union(VALID_CHROMIUM_STRINGS)
-
 
 class DriverManager:
     """Webdriver manager."""
@@ -65,13 +64,12 @@ class DriverManager:
                 service=FirefoxService(GeckoDriverManager().install())
             )
         elif browser_lower in VALID_OPERA_STRINGS:
-            # Correction Opera : Utilise le moteur Chromium (standard webdriver-manager 4+)
+            # Pour Opera, on utilise le driver Chromium
             service = ChromeService(
                 ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
             )
             options = ChromeOptions()
             options.add_experimental_option("w3c", True)
-            # Note : Sur certains systèmes, il faut spécifier le chemin de l'exécutable Opera
             self.driver = webdriver.Chrome(service=service, options=options)
             
         elif browser_lower in VALID_INTERNET_EXPLORER_STRINGS:
@@ -79,7 +77,6 @@ class DriverManager:
         else:
             raise ValueError("No matching browser found")
 
-        # Bypass captcha simple
         self.driver.execute_cdp_cmd(
             "Page.addScriptToEvaluateOnNewDocument",
             {
