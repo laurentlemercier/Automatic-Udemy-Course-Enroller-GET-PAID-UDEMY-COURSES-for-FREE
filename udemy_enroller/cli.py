@@ -106,7 +106,7 @@ def run(
     tutorialbar_enabled: bool,
     discudemy_enabled: bool,
     coursevania_enabled: bool,
-    max_pages: Union[int, None],
+    max_pages: Union[int],
     experimental_fuzz: bool,
     fuzz_seed: Union[int, None],
     max_concurrency: int,
@@ -197,8 +197,8 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--max-pages",
         type=int,
-        default=5,
-        help="Max pages to scrape from sites (if pagination exists) (Default is 5)",
+        default=100,
+        help="Max pages to scrape from sites (if pagination exists) (Default is 100)",
     )
     parser.add_argument(
         "--experimental-fuzz",
