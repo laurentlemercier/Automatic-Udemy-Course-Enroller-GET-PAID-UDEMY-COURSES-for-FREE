@@ -197,8 +197,8 @@ def parse_args() -> Namespace:
     parser.add_argument(
         "--max-pages",
         type=int,
-        default=100,
-        help="Max pages to scrape from sites (if pagination exists) (Default is 100)",
+        default=500,
+        help="Max pages to scrape from sites (if pagination exists) (Default is 500)",
     )
     parser.add_argument(
         "--experimental-fuzz",
