@@ -1,0 +1,20 @@
+{
+  "python.defaultInterpreterPath": "E:\\Python\\Envs\\udemy-enroller\\Scripts\\python.exe",
+  "python.languageServer": "Pylance",
+
+  "python.analysis.typeCheckingMode": "basic",
+  "python.analysis.autoImportCompletions": true,
+
+  "python.linting.enabled": true,
+  "python.linting.pylintEnabled": true,
+
+  "editor.formatOnSave": true,
+  "editor.codeActionsOnSave": {
+    "source.organizeImports": "explicit"
+  },
+
+  "files.exclude": {
+    "**/__pycache__": true,
+    "**/.pytest_cache": true
+  }
+}

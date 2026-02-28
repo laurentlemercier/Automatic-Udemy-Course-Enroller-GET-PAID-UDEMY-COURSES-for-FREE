@@ -6,7 +6,7 @@ from typing import List
 
 from bs4 import BeautifulSoup
 
-from udemy_enroller.http_utils import http_get, http_get_no_redirect
+from udemy_enroller.http_utils import http_get # , http_get_no_redirect
 from udemy_enroller.logger import get_logger
 from udemy_enroller.scrapers.base_scraper import BaseScraper
 

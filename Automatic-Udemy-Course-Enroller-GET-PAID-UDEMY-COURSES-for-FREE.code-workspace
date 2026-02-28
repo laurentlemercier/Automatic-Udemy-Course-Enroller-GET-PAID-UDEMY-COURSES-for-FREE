@@ -1,0 +1,14 @@
+{
+	"folders": [
+		{
+			"path": "."
+		}
+	],
+	"settings": {
+		"python.languageServer": "Pylance",
+		"python-envs.workspaceSearchPaths": [
+			"./**/.venv",
+			"E:\\Python\\Envs"
+		]
+	}
+}

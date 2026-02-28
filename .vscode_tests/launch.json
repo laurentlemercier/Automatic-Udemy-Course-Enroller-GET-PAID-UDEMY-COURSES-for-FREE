@@ -1,0 +1,14 @@
+{
+  "version": "0.2.0",
+  "configurations": [
+    {
+      "name": "Run Enroller",
+      "type": "python",
+      "request": "launch",
+      "program": "${workspaceFolder}/run_enroller.py",
+      "console": "integratedTerminal",
+      "justMyCode": false,
+      "args": ["--help"]
+    }
+  ]
+}
