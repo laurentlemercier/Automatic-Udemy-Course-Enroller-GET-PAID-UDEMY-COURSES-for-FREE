@@ -42,7 +42,6 @@ from udemy_enroller.driver_manager import (
 @mock.patch("udemy_enroller.driver_manager.EdgeService")
 @mock.patch("udemy_enroller.driver_manager.IEDriverManager")
 @mock.patch("udemy_enroller.driver_manager.IEService")
-@mock.patch("udemy_enroller.driver_manager.OperaDriverManager")
 @mock.patch("udemy_enroller.driver_manager.ChromeType")
 def test_driver_manager_init(
     _,
