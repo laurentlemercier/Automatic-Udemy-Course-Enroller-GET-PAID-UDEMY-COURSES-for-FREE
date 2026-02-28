@@ -20,7 +20,7 @@ VALID_FIREFOX_STRINGS = {"ff", "firefox"}
 VALID_CHROME_STRINGS = {"chrome", "google-chrome"}
 VALID_CHROMIUM_STRINGS = {"chromium"}
 VALID_INTERNET_EXPLORER_STRINGS = {"internet_explorer", "ie"}
-VALID_OPERA_STRINGS = {"opera"}
+VALID_OPERA_STRINGS = {"chromium"}
 VALID_EDGE_STRINGS = {"edge"}
 
 ALL_VALID_BROWSER_STRINGS = VALID_CHROME_STRINGS.union(VALID_CHROMIUM_STRINGS)
@@ -48,7 +48,7 @@ class DriverManager:
                 self.options = self._build_ci_options_chrome()
 
             self.driver = webdriver.Chrome(
-                service=ChromeService(ChromeDriverManager().install()),
+                service=ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install(),
                 options=self.options,
             )
         elif self.browser.lower() in VALID_CHROMIUM_STRINGS:
