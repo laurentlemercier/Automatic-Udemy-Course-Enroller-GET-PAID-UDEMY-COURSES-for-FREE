@@ -88,13 +88,17 @@ class TutorialBarScraper(BaseScraper):
             soup = BeautifulSoup(result.value.decode("utf-8"), "html.parser")
 
             links = soup.find_all("h3")
-            course_links = [link.find("a").get("href") for link in links]
+            course_links = []
+            for link in links:
+                anchor = link.find("a")
+                if anchor and anchor.get("href"):
+                    course_links.append(anchor.get("href"))
 
-            self.last_page = (
-                soup.find("li", class_="next_paginate_link")
-                .find_previous_sibling()
-                .text
-            )
+            next_page_elem = soup.find("li", class_="next_paginate_link")
+            if next_page_elem and next_page_elem.find_previous_sibling():
+                self.last_page = next_page_elem.find_previous_sibling().text
+            else:
+                self.last_page = "1"
 
             return course_links
 
@@ -106,13 +110,15 @@ class TutorialBarScraper(BaseScraper):
         :param str url: The url to scrape data from
         :return: Coupon link of the udemy course
         """
-        result = await http_get(url)
-        if result.ok and result.value is not None:
-            soup = BeautifulSoup(result.value.decode("utf-8"), "html.parser")
-            udemy_link = (
-                soup.find("span", class_="rh_button_wrapper").find("a").get("href")
-            )
-            return udemy_link
+        text = await http_get(url)
+        if text is not None:
+            soup = BeautifulSoup(text.decode("utf-8"), "html.parser")
+            button_wrapper = soup.find("span", class_="rh_button_wrapper")
+            if button_wrapper:
+                anchor = button_wrapper.find("a")
+                if anchor and anchor.get("href"):
+                    return anchor.get("href")
+        return None
 
     async def gather_udemy_course_links(self, courses: List[str]):
         """
