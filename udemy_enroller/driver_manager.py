@@ -54,7 +54,7 @@ class DriverManager:
         elif self.browser.lower() in VALID_CHROMIUM_STRINGS:
             self.driver = webdriver.Chrome(
                 service=ChromeService(
-                    ChromeDriverManager(chrome_type="chromium").install()
+                    ChromeDriverManager(chrome_type=ChromeType.CHROMIUM).install()
                 )
             )
         elif self.browser.lower() in VALID_EDGE_STRINGS:
